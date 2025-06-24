@@ -817,6 +817,12 @@ variable "evidence_repo_initialization_type" {
   default     = ""
 }
 
+variable "evidence_repo_enabled" {
+  type        = bool
+  description = "Set to `true` to enable the evidence repository tool integration."
+  default     = true
+}
+
 variable "evidence_repo_name" {
   type        = string
   description = "The repository name."
@@ -1642,4 +1648,14 @@ variable "use_legacy_ref" {
   type        = bool
   description = "Set to `true` to use the legacy secret reference format for Secrets Manager secrets."
   default     = true
+}
+
+variable "pipeline_workflow" {
+  type        = string
+  description = "Provided the running context of the toolchain."
+  default     = "advanced"
+  validation {
+    condition     = contains(["basic", "standard", "advanced"], var.pipeline_workflow)
+    error_message = "Must be either \"basic\" or \"standard\" or \"complete\"."
+  }
 }

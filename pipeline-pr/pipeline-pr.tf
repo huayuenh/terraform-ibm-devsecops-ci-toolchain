@@ -1,3 +1,11 @@
+locals {
+  enable_compliance = (var.pipeline_workflow == "advanced") ? true : false
+  event_listener = (
+    (var.pipeline_workflow == "basic") ? "dev-mode-listener" :
+    (var.app_repo_provider_webhook_syntax == "github") ? "ci-listener" : "ci-listener-gitlab"
+  )
+}
+
 resource "ibm_cd_tekton_pipeline" "pr_pipeline_instance" {
   pipeline_id = var.pipeline_id
   worker {

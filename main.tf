@@ -296,6 +296,10 @@ locals {
     git_id               = try(pipeline.git_id, "")
     }
   ])
+
+  enable_inventory  = (var.pipeline_workflow == "standard" || var.pipeline_workflow == "advanced") ? true : false
+  enable_compliance = (var.pipeline_workflow == "advanced") ? true : false
+
 }
 
 data "ibm_resource_group" "resource_group" {
@@ -309,6 +313,7 @@ resource "ibm_cd_toolchain" "toolchain_instance" {
 }
 
 module "issues_repo" {
+  count                 = (local.enable_compliance) ? 1 : 0
   source                = "./customizations/repositories"
   depends_on            = [module.integrations]
   tool_name             = "issues-repo"
@@ -333,6 +338,7 @@ module "issues_repo" {
 }
 
 module "evidence_repo" {
+  count                 = (var.evidence_repo_enabled == true && local.enable_compliance == true) ? 1 : 0
   source                = "./customizations/repositories"
   depends_on            = [module.integrations]
   tool_name             = "evidence-repo"
@@ -357,6 +363,7 @@ module "evidence_repo" {
 }
 
 module "inventory_repo" {
+  count                 = (local.enable_inventory) ? 1 : 0
   source                = "./customizations/repositories"
   depends_on            = [module.integrations]
   tool_name             = "inventory-repo"
@@ -477,12 +484,12 @@ module "pipeline_ci" {
   pipeline_config_repo_clone_from_url = var.pipeline_config_repo_clone_from_url
   pipeline_config_repo                = try(module.pipeline_config_repo[0].repository, "")
   pipeline_repo_url                   = module.compliance_pipelines_repo.repository_url
-  evidence_repo_url                   = module.evidence_repo.repository_url
-  inventory_repo_url                  = module.inventory_repo.repository_url
-  issues_repo_url                     = module.issues_repo.repository_url
-  evidence_repo                       = module.evidence_repo.repository
-  inventory_repo                      = module.inventory_repo.repository
-  issues_repo                         = module.issues_repo.repository
+  evidence_repo_url                   = try(module.evidence_repo[0].repository_url, "")
+  inventory_repo_url                  = try(module.inventory_repo[0].repository_url, "")
+  issues_repo_url                     = try(module.issues_repo[0].repository_url, "")
+  evidence_repo                       = try(module.evidence_repo[0].repository, "")
+  inventory_repo                      = try(module.inventory_repo[0].repository, "")
+  issues_repo                         = try(module.issues_repo[0].repository, "")
   app_repo_provider_webhook_syntax    = try(module.app_repo[0].repo_provider_name, "")
   sonarqube_user                      = var.sonarqube_user
   worker_id                           = module.integrations.worker_id
@@ -504,6 +511,7 @@ module "pipeline_ci" {
   link_to_doi_toolchain               = var.link_to_doi_toolchain
   sonarqube_tool                      = (module.integrations.sonarqube_tool)
   default_locked_properties           = var.default_locked_properties
+  pipeline_workflow                   = var.pipeline_workflow
 }
 
 resource "ibm_cd_toolchain_tool_pipeline" "pr_pipeline" {
@@ -529,8 +537,8 @@ module "pipeline_pr" {
   pipeline_config_repo_clone_from_url = var.pipeline_config_repo_clone_from_url
   pipeline_config_repo                = try(module.pipeline_config_repo[0].repository, "")
   pipeline_repo_url                   = module.compliance_pipelines_repo.repository_url
-  issues_repo                         = module.issues_repo.repository
-  evidence_repo                       = module.evidence_repo.repository
+  issues_repo                         = try(module.issues_repo[0].repository, "")
+  evidence_repo                       = try(module.evidence_repo[0].repository, "")
   app_repo_provider_webhook_syntax    = try(module.app_repo[0].repo_provider_name, "")
   tool_artifactory                    = module.integrations.ibm_cd_toolchain_tool_artifactory
   enable_artifactory                  = var.enable_artifactory
@@ -543,6 +551,7 @@ module "pipeline_pr" {
   trigger_pr_git_enable               = var.trigger_pr_git_enable
   enable_pipeline_notifications       = (var.event_notifications_crn != "" || var.enable_slack) ? true : false
   default_locked_properties           = var.default_locked_properties
+  pipeline_workflow                   = var.pipeline_workflow
 }
 
 module "integrations" {
@@ -560,8 +569,8 @@ module "integrations" {
   kp_resource_group                    = var.kp_resource_group
   kp_name                              = var.kp_name
   kp_instance_guid                     = module.services.kp_instance_guid
-  enable_secrets_manager               = var.enable_secrets_manager
-  enable_key_protect                   = var.enable_key_protect
+  enable_secrets_manager               = (var.enable_secrets_manager == true && var.pipeline_workflow != "basic") ? true : false
+  enable_key_protect                   = (var.enable_key_protect == true && var.pipeline_workflow != "basic") ? true : false
   enable_slack                         = var.enable_slack
   slack_webhook_secret_ref             = local.slack_webhook_secret_ref
   slack_channel_name                   = var.slack_channel_name
@@ -595,13 +604,13 @@ module "integrations" {
   sonarqube_secret_ref                 = local.sonarqube_secret_ref
   sonarqube_is_blind_connection        = var.sonarqube_is_blind_connection
   sonarqube_server_url                 = var.sonarqube_server_url
-  enable_insights                      = var.enable_insights
+  enable_insights                      = (var.enable_insights == true && var.pipeline_workflow != "basic") ? true : false
   enable_concert                       = var.enable_concert
   concert_dashboard_url                = var.concert_dashboard_url
   concert_description                  = var.concert_description
   concert_documentation_url            = var.concert_documentation_url
   concert_integration_name             = var.concert_integration_name
-  enable_cos                           = var.enable_cos
+  enable_cos                           = (var.enable_cos == true && var.pipeline_workflow == "advanced") ? true : false
   cos_dashboard_url                    = var.cos_dashboard_url
   cos_description                      = var.cos_description
   cos_documentation_url                = var.cos_documentation_url
@@ -625,8 +634,8 @@ module "services" {
   kp_name                = var.kp_name
   kp_location            = var.kp_location
   kp_resource_group      = var.kp_resource_group
-  enable_secrets_manager = var.enable_secrets_manager
-  enable_key_protect     = var.enable_key_protect
+  enable_secrets_manager = (var.enable_secrets_manager == true && var.pipeline_workflow != "basic") ? true : false
+  enable_key_protect     = (var.enable_key_protect == true && var.pipeline_workflow != "basic") ? true : false
 }
 
 # This is the structure being passed with each loop

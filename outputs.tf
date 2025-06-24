@@ -43,65 +43,65 @@ output "private_worker_id" {
 }
 
 output "inventory_repo_url" {
-  value       = module.inventory_repo.repository_url
+  value       = try(module.inventory_repo[0].repository_url, "")
   description = "The inventory repository instance URL, with details of which artifact has been built and will be deployed."
 }
 
 output "evidence_repo_url" {
-  value       = module.evidence_repo.repository_url
+  value       = try(module.evidence_repo[0].repository_url, "")
   description = "The evidence repository instance URL, where evidence of the builds and scans are stored, ready for any compliance audit."
 }
 
 output "issues_repo_url" {
-  value       = module.issues_repo.repository_url
+  value       = try(module.issues_repo[0].repository_url, "")
   description = "The incident issues repository instance URL, where issues are created when vulnerabilities and CVEs are detected."
 }
 
 output "inventory_repo" {
-  value       = module.inventory_repo.repository
+  value       = try(module.inventory_repo[0].repository, "")
   description = "The Inventory repo."
   sensitive   = true
 }
 
 output "inventory_repo_git_provider" {
-  value       = module.inventory_repo.repo_provider
+  value       = try(module.inventory_repo[0].repo_provider, "")
   description = "The inventory repository provider type. Can be 'hostedgit', 'githubconsolidated' etc."
 }
 
 output "inventory_repo_git_id" {
-  value       = module.inventory_repo.repo_git_id
+  value       = try(module.inventory_repo[0].repo_git_id, "")
   description = "The inventory repository Git ID"
 }
 
 output "evidence_repo" {
-  value       = module.evidence_repo.repository
+  value       = try(module.evidence_repo[0].repository, "")
   description = "The Evidence repo."
   sensitive   = true
 }
 
 output "evidence_repo_git_provider" {
-  value       = module.evidence_repo.repo_provider
+  value       = try(module.evidence_repo[0].repo_provider, "")
   description = "The evidence repository provider type. Can be 'hostedgit', 'githubconsolidated' etc."
 }
 
 output "evidence_repo_git_id" {
-  value       = module.evidence_repo.repo_git_id
+  value       = try(module.evidence_repo[0].repo_git_id, "")
   description = "The evidence repository Git ID"
 }
 
 output "issues_repo" {
-  value       = module.issues_repo.repository
+  value       = try(module.issues_repo[0].repository, "")
   description = "The Issues repo."
   sensitive   = true
 }
 
 output "issues_repo_git_provider" {
-  value       = module.issues_repo.repo_provider
+  value       = try(module.issues_repo[0].repo_provider, "")
   description = "The issues repository provider type. Can be 'hostedgit', 'githubconsolidated' etc."
 }
 
 output "issues_repo_git_id" {
-  value       = module.issues_repo.repo_git_id
+  value       = try(module.issues_repo[0].repo_git_id, "")
   description = "The issues repository Git ID"
 }
 
@@ -116,7 +116,7 @@ output "pipeline_repo_git_provider" {
 }
 
 output "pipeline_repo_git_id" {
-  value       = module.compliance_pipelines_repo.repo_git_id
+  value       = try(module.compliance_pipelines_repo.repo_git_id, "")
   description = "The compliance pipeline repository Git ID"
 }
 

@@ -18,18 +18,20 @@ resource "ibm_cd_tekton_pipeline_property" "ci_pipeline_pipeline_config_repo_def
 }
 
 resource "ibm_cd_tekton_pipeline_property" "ci_pipeline_evidence_repo" {
+  count       = (local.enable_compliance) ? 1 : 0
   name        = "evidence-repo"
   type        = "integration"
-  value       = var.evidence_repo.tool_id
+  value       = try(var.evidence_repo.tool_id, "")
   path        = "parameters.repo_url"
   pipeline_id = ibm_cd_tekton_pipeline.ci_pipeline_instance.pipeline_id
   locked      = contains(var.default_locked_properties, "evidence-repo") ? "true" : "false"
 }
 
 resource "ibm_cd_tekton_pipeline_property" "ci_pipeline_inventory_repo" {
+  count       = (local.enable_inventory) ? 1 : 0
   name        = "inventory-repo"
   type        = "integration"
-  value       = var.inventory_repo.tool_id
+  value       = try(var.inventory_repo.tool_id, "")
   path        = "parameters.repo_url"
   pipeline_id = ibm_cd_tekton_pipeline.ci_pipeline_instance.pipeline_id
   locked      = contains(var.default_locked_properties, "inventory-repo") ? "true" : "false"
@@ -38,9 +40,10 @@ resource "ibm_cd_tekton_pipeline_property" "ci_pipeline_inventory_repo" {
 // Limitation with issues repository url: How to fetch issues repository url
 // as it is created internally while creating application repository resource
 resource "ibm_cd_tekton_pipeline_property" "ci_pipeline_issues_repo" {
+  count       = (local.enable_compliance) ? 1 : 0
   name        = "incident-repo"
   type        = "integration"
-  value       = var.issues_repo.tool_id
+  value       = try(var.issues_repo.tool_id, "")
   path        = "parameters.repo_url"
   pipeline_id = ibm_cd_tekton_pipeline.ci_pipeline_instance.pipeline_id
   locked      = contains(var.default_locked_properties, "incident-repo") ? "true" : "false"

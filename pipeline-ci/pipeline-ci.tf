@@ -1,3 +1,13 @@
+locals {
+
+  enable_inventory  = (var.pipeline_workflow == "standard" || var.pipeline_workflow == "advanced") ? true : false
+  enable_compliance = (var.pipeline_workflow == "advanced") ? true : false
+  event_listener = (
+    (var.pipeline_workflow == "basic") ? "dev-mode-listener" :
+    (var.app_repo_provider_webhook_syntax == "github") ? "ci-listener" : "ci-listener-gitlab"
+  )
+}
+
 resource "ibm_cd_tekton_pipeline" "ci_pipeline_instance" {
   pipeline_id = var.pipeline_id
   worker {
@@ -35,14 +45,13 @@ resource "ibm_cd_tekton_pipeline_definition" "cd_tekton_definition_tag" {
 ############ GIT Trigger #############################################
 
 resource "ibm_cd_tekton_pipeline_trigger" "ci_pipeline_scm_trigger" {
-  count       = (var.create_git_triggers && var.enable_app_repo_integration) ? 1 : 0
-  pipeline_id = ibm_cd_tekton_pipeline.ci_pipeline_instance.pipeline_id
-  type        = "scm"
-  name        = var.trigger_git_name
-  event_listener = ((var.app_repo_provider_webhook_syntax == "github") ?
-  "ci-listener" : "ci-listener-gitlab")
-  events  = ["push"]
-  enabled = var.trigger_git_enable
+  count          = (var.create_git_triggers && var.enable_app_repo_integration) ? 1 : 0
+  pipeline_id    = ibm_cd_tekton_pipeline.ci_pipeline_instance.pipeline_id
+  type           = "scm"
+  name           = var.trigger_git_name
+  event_listener = local.event_listener
+  events         = ["push"]
+  enabled        = var.trigger_git_enable
   source {
     type = "git"
     properties {
@@ -65,7 +74,7 @@ resource "ibm_cd_tekton_pipeline_trigger_property" "ci_pipeline_scm_trigger_prop
 ########### Timed Trigger ###################################################
 
 resource "ibm_cd_tekton_pipeline_trigger" "ci_pipeline_timed_trigger" {
-  count       = (var.create_triggers && var.enable_app_repo_integration) ? 1 : 0
+  count       = (var.create_triggers && var.enable_app_repo_integration && var.pipeline_workflow != "basic") ? 1 : 0
   pipeline_id = ibm_cd_tekton_pipeline.ci_pipeline_instance.pipeline_id
   type        = "timer"
   name        = var.trigger_timed_name
@@ -78,7 +87,7 @@ resource "ibm_cd_tekton_pipeline_trigger" "ci_pipeline_timed_trigger" {
 }
 
 resource "ibm_cd_tekton_pipeline_trigger_property" "ci_pipeline_timed_trigger_property_app_name" {
-  count       = (var.create_triggers && var.enable_app_repo_integration) ? 1 : 0
+  count       = (var.create_triggers && var.enable_app_repo_integration && var.pipeline_workflow != "basic") ? 1 : 0
   name        = "app-name"
   type        = "text"
   value       = var.app_name

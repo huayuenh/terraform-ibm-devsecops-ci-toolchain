@@ -62,6 +62,11 @@ module "devsecops_ci_toolchain" {
   cos_api_key_secret_group                       = var.cos_api_key_secret_group
   cos_api_key_secret_name                        = var.cos_api_key_secret_name
   cos_bucket_name                                = var.cos_bucket_name
+  cos_hmac_access_key_secret_crn                 = var.cos_hmac_access_key_secret_crn
+  cos_hmac_secret_access_id_crn                  = var.cos_hmac_secret_access_id_crn
+  cos_hmac_access_key_id_secret_name             = var.cos_hmac_access_key_id_secret_name
+  cos_hmac_secret_access_key_secret_name         = var.cos_hmac_secret_access_key_secret_name
+  cos_instance_crn                               = var.cos_instance_crn
   cos_dashboard_url                              = var.cos_dashboard_url
   cos_description                                = var.cos_description
   cos_documentation_url                          = var.cos_documentation_url
@@ -91,6 +96,7 @@ module "devsecops_ci_toolchain" {
   evidence_repo_auth_type                        = var.evidence_repo_auth_type
   evidence_repo_blind_connection                 = var.evidence_repo_blind_connection
   evidence_repo_clone_from_url                   = var.evidence_repo_clone_from_url
+  evidence_repo_enabled                          = var.evidence_repo_enabled
   evidence_repo_existing_url                     = var.evidence_repo_existing_url
   evidence_repo_git_id                           = var.evidence_repo_git_id
   evidence_repo_git_provider                     = var.evidence_repo_git_provider
@@ -177,6 +183,7 @@ module "devsecops_ci_toolchain" {
   pipeline_ibmcloud_api_key_secret_name          = var.pipeline_ibmcloud_api_key_secret_name
   pipeline_properties_filepath                   = var.pipeline_properties_filepath
   pipeline_properties                            = var.pipeline_properties
+  pipeline_workflow                              = var.pipeline_workflow
   pr_pipeline_branch                             = var.pr_pipeline_branch
   pr_pipeline_git_tag                            = var.pr_pipeline_git_tag
   privateworker_credentials_secret_crn           = var.privateworker_credentials_secret_crn
@@ -238,5 +245,6 @@ module "devsecops_ci_toolchain" {
   trigger_timed_cron_schedule                    = var.trigger_timed_cron_schedule
   trigger_timed_enable                           = var.trigger_timed_enable
   trigger_timed_name                             = var.trigger_timed_name
+  use_legacy_cos_tool                            = var.use_legacy_cos_tool
   worker_id                                      = var.worker_id
 }

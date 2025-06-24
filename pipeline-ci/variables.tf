@@ -118,3 +118,6 @@ variable "default_locked_properties" {
 
 variable "enable_app_repo_integration" {
 }
+
+variable "pipeline_workflow" {
+}

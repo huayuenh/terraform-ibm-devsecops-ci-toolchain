@@ -83,3 +83,6 @@ variable "worker_id" {
 
 variable "enable_app_repo_integration" {
 }
+
+variable "pipeline_workflow" {
+}

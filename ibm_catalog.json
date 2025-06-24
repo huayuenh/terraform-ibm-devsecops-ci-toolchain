@@ -33,6 +33,13 @@
                             "required": true
                         },
                         {
+                            "key": "pipeline_workflow",
+                            "type": "string",
+                            "default_value": "advanced",
+                            "description": "Select the level of compliance enforced by the toolchain. Can be `basic`, `standard` or `advanced`",
+                            "required": true
+                        },
+                        {
                             "key": "toolchain_name",
                             "type": "string",
                             "default_value": "DevSecOps CI Toolchain - Terraform",
@@ -604,10 +611,38 @@
                             "required": false
                         },
                         {
+                            "key": "cos_hmac_access_key_id_secret_name",
+                            "type": "string",
+                            "default_value": "",
+                            "description": "The name of the secret in Secrets Manager for the HMAC Access Key ID.",
+                            "required": false
+                        },
+                        {
+                            "key": "cos_hmac_secret_access_key_secret_name",
+                            "type": "string",
+                            "default_value": "",
+                            "description": "The name of the secret in Secrets Manager for the HMAC Secrte Access Key.",
+                            "required": false
+                        },
+                        {
                             "key": "cos_integration_name",
                             "type": "string",
                             "default_value": "Evidence Store",
                             "description": "The name of the COS integration.",
+                            "required": false
+                        },
+                        {
+                            "key": "cos_instance_crn",
+                            "type": "string",
+                            "default_value": "",
+                            "description": "The CRN of the Cloud Object Storage instance.",
+                            "required": false
+                        },
+                        {
+                            "key": "use_legacy_cos_tool",
+                            "type": "boolean",
+                            "default_value": false,
+                            "description": "The custom tool integration is being replaced with the new COS tool integration. To continue using the legacy tool. Set the value to `true`. See `enable_cos`",
                             "required": false
                         },
                         {
@@ -690,7 +725,7 @@
                         {
                             "key": "enable_cos",
                             "type": "boolean",
-                            "default_value": true,
+                            "default_value": false,
                             "description": "Set to `true` to enable the COS integration.",
                             "required": false
                         },
@@ -824,6 +859,13 @@
                             "type": "boolean",
                             "default_value": false,
                             "description": "Set to `true` to enable issues.",
+                            "required": false
+                        },
+                        {
+                            "key": "evidence_repo_enabled",
+                            "type": "boolean",
+                            "default_value": true,
+                            "description": "Set to `true` to enable the evidence repository tool integration.",
                             "required": false
                         },
                         {
@@ -1313,6 +1355,18 @@
                             "required": false
                         },
                         {
+                            "key": "cos_hmac_access_key_secret_crn",
+                            "type": "password",
+                            "description": "The CRN for the HMAC Secret Access Key. The HMAC Secret Access Key which is part of an HMAC (Hash Message Authentication Code) credential set. HMAC is identified by a combination of an Access Key ID and a Secret Access Key.",
+                            "required": false
+                        },
+                        {
+                            "key": "cos_hmac_secret_access_id_crn",
+                            "type": "password",
+                            "description": "The CRN for the HMAC Access Key ID. The HMAC Access Key ID which is part of an HMAC (Hash Message Authentication Code) credential set. HMAC is identified by a combination of an Access Key ID and a Secret Access Key.",
+                            "required": false
+                        },
+                        {
                             "key": "pipeline_ibmcloud_api_key_secret_crn",
                             "type": "password",
                             "description": "The CRN for the IBMCloud apikey.",
@@ -1762,6 +1816,13 @@
                             "key": "ibmcloud_api_key",
                             "type": "password",
                             "description": "API key used to create the toolchain.",
+                            "required": true
+                        },
+                        {
+                            "key": "pipeline_workflow",
+                            "type": "string",
+                            "default_value": "advanced",
+                            "description": "Select the level of compliance enforced by the toolchain. Can be `basic`, `standard` or `advanced`",
                             "required": true
                         },
                         {
@@ -2324,10 +2385,38 @@
                             "required": false
                         },
                         {
+                            "key": "cos_hmac_access_key_id_secret_name",
+                            "type": "string",
+                            "default_value": "",
+                            "description": "The name of the secret in Secrets Manager for the HMAC Access Key ID.",
+                            "required": false
+                        },
+                        {
+                            "key": "cos_hmac_secret_access_key_secret_name",
+                            "type": "string",
+                            "default_value": "",
+                            "description": "The name of the secret in Secrets Manager for the HMAC Secrte Access Key.",
+                            "required": false
+                        },
+                        {
                             "key": "cos_integration_name",
                             "type": "string",
                             "default_value": "Evidence Store",
                             "description": "The name of the COS integration.",
+                            "required": false
+                        },
+                        {
+                            "key": "cos_instance_crn",
+                            "type": "string",
+                            "default_value": "",
+                            "description": "The CRN of the Cloud Object Storage instance.",
+                            "required": false
+                        },
+                        {
+                            "key": "use_legacy_cos_tool",
+                            "type": "boolean",
+                            "default_value": false,
+                            "description": "The custom tool integration is being replaced with the new COS tool integration. To continue using the legacy tool. Set the value to `true`. See `enable_cos`",
                             "required": false
                         },
                         {
@@ -2410,7 +2499,7 @@
                         {
                             "key": "enable_cos",
                             "type": "boolean",
-                            "default_value": true,
+                            "default_value": false,
                             "description": "Set to `true` to enable the COS integration.",
                             "required": false
                         },
@@ -2544,6 +2633,13 @@
                             "type": "boolean",
                             "default_value": false,
                             "description": "Set to `true` to enable issues.",
+                            "required": false
+                        },
+                        {
+                            "key": "evidence_repo_enabled",
+                            "type": "boolean",
+                            "default_value": true,
+                            "description": "Set to `true` to enable the evidence repository tool integration.",
                             "required": false
                         },
                         {
@@ -3030,6 +3126,18 @@
                             "type": "string",
                             "default_value": "",
                             "description": "Name of the Cloud API key secret in the secret provider to access the toolchain containing the Devops Insights instance.",
+                            "required": false
+                        },
+                        {
+                            "key": "cos_hmac_access_key_secret_crn",
+                            "type": "password",
+                            "description": "The CRN for the HMAC Secret Access Key. The HMAC Secret Access Key which is part of an HMAC (Hash Message Authentication Code) credential set. HMAC is identified by a combination of an Access Key ID and a Secret Access Key.",
+                            "required": false
+                        },
+                        {
+                            "key": "cos_hmac_secret_access_id_crn",
+                            "type": "password",
+                            "description": "The CRN for the HMAC Access Key ID. The HMAC Access Key ID which is part of an HMAC (Hash Message Authentication Code) credential set. HMAC is identified by a combination of an Access Key ID and a Secret Access Key.",
                             "required": false
                         },
                         {
