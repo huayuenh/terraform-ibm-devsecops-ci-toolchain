@@ -1246,9 +1246,9 @@ variable "pipeline_config_group" {
 }
 
 variable "add_pipeline_definitions" {
-  type        = string
+  type        = bool
   description = "Set to `true` to add pipeline definitions."
-  default     = "true"
+  default     = true
 }
 
 variable "ci_pipeline_branch" {
