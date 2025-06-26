@@ -1,8 +1,9 @@
 {
     "products": [
         {
-            "label": "terraform-ibm-devsecops-ci-toolchain-2.7.1",
-            "name": "terraform-ibm-devsecops-ci-toolchain-2.7.1",
+            "label": "DevSecOps CI Toolchain",
+            "name": "deploy-arch-devsecops-ci-toolchain",
+            "version": "1.0.2",
             "product_kind": "solution",
             "tags": [
                 "enterprise_app"
