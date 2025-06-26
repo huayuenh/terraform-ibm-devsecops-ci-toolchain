@@ -68,17 +68,39 @@
                             "key": "toolchain_region",
                             "type": "string",
                             "default_value": "us-south",
-                            "description": "IBM Cloud Region for the toolchain.",
+                            "description": "The region identifier that will be used, by default, for all resource creation and service instance lookup. This can be overridden on a per resource/service basis.",
+                            "display_name": "Region",
                             "required": true,
-                            "virtual": false
+                            "custom_config": {
+                                "type": "region",
+                                "grouping": "deployment",
+                                "original_grouping": "deployment",
+                                "config_constraints": {
+                                    "filterString": "id:au-syd,br-sao,ca-tor,eu-de,eu-es,eu-gb,jp-osa,jp-tok,us-east,us-south",
+                                    "showKinds": [
+                                        "region",
+                                        "zone",
+                                        "dc",
+                                        "location"
+                                    ]
+                                }
+                            }
                         },
                         {
                             "key": "toolchain_resource_group",
                             "type": "string",
-                            "default_value": "Default",
-                            "description": "The resource group within which the toolchain is created.",
+                            "default_value": "",
+                            "description": "The resource group that will be used, by default, for all resource creation and service instance lookups. This can be overridden on a per resource/service basis.",
+                            "display_name": "Resource group",
                             "required": true,
-                            "virtual": false
+                            "custom_config": {
+                                "type": "resource_group",
+                                "grouping": "deployment",
+                                "original_grouping": "deployment",
+                                "config_constraints": {
+                                    "identifier": "rg_name"
+                                }
+                            }
                         },
                         {
                             "key": "code_engine_project",
@@ -125,8 +147,22 @@
                             "type": "string",
                             "default_value": "us-south",
                             "description": "IBM Cloud location/region containing the Secrets Manager instance. Not required if using a Secrets Manager CRN instance.",
+                            "display_name": "Region",
                             "required": false,
-                            "virtual": false
+                            "custom_config": {
+                                "type": "region",
+                                "grouping": "deployment",
+                                "original_grouping": "deployment",
+                                "config_constraints": {
+                                    "filterString": "id:au-syd,br-sao,ca-tor,eu-de,eu-es,eu-gb,jp-osa,jp-tok,us-east,us-south",
+                                    "showKinds": [
+                                        "region",
+                                        "zone",
+                                        "dc",
+                                        "location"
+                                    ]
+                                }
+                            }
                         },
                         {
                             "key": "sm_name",
