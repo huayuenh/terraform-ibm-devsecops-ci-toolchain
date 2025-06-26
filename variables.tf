@@ -121,7 +121,7 @@ variable "dev_resource_group" {
 variable "registry_namespace" {
   type        = string
   description = "A unique namespace within the IBM Cloud Container Registry region where the application image is stored."
-  default     = "devsecops-ci-registry"
+  default     = ""
 }
 
 variable "registry_region" {

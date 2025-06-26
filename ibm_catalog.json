@@ -113,7 +113,7 @@
                         {
                             "key": "registry_namespace",
                             "type": "string",
-                            "default_value": "devsecops-ci-registry",
+                            "default_value": "",
                             "description": "A unique namespace within the IBM Cloud Container Registry region where the application image is stored.",
                             "required": true,
                             "virtual": false
@@ -131,6 +131,14 @@
                             "type": "string",
                             "default_value": "",
                             "description": "Used when `app_repo_clone_from_url` or  `app_repo_existing_url`. Allows the default branch for the provided repository to be set.",
+                            "required": false,
+                            "virtual": false
+                        },
+                        {
+                            "key": "pipeline_properties",
+                            "type": "string",
+                            "default_value": "",
+                            "description": "Stringified JSON containing the properties. This takes precedence over the properties JSON.",
                             "required": false,
                             "virtual": false
                         },
@@ -1645,14 +1653,6 @@
                             "type": "string",
                             "default_value": "ibmcloud-api-key",
                             "description": "Name of the Cloud API key secret in the secret provider.",
-                            "required": false,
-                            "virtual": false
-                        },
-                        {
-                            "key": "pipeline_properties",
-                            "type": "string",
-                            "default_value": "",
-                            "description": "Stringified JSON containing the properties. This takes precedence over the properties JSON.",
                             "required": false,
                             "virtual": false
                         },
